@@ -1,6 +1,4 @@
-ARG tag
-
-FROM ubuntu:${tag}
+FROM ubuntu:22.04
 
 ENV USER=ddiag
 ENV USER_HOME=/home/${USER}
