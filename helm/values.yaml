@@ -1,0 +1,7 @@
+# Create the DDiag pod with SecurityContext including UID and GID 1000
+# and disabling the "privilege" option and dropping all capabilities?
+securityContext: true
+
+# Create NetworkPolicy enabling anything "from" and "to" the DDiag?
+# This is unneccessary if you have no other NetworkPolicy in the current namespace.
+networkPolicy: true

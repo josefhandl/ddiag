@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-ddiag
+spec:
+  selector:
+    matchLabels:
+      app: ddiag
+
+  template:
+    metadata:
+      labels:
+        app: ddiag
+
+    spec:
+
+{{- if .Values.securityContext }}
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+{{- end }}
+
+      containers:
+      - name: ddiag
+        image: hub.cerit.io/josef_handl/ddiag:22.04
+        imagePullPolicy: Always
+
+{{- if .Values.securityContext }}
+        securityContext:
+          privileged: false
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+{{- end }}

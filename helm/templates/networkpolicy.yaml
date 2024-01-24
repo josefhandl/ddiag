@@ -1,0 +1,17 @@
+{{- if .Values.networkPolicy }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-ddiag-networkpolicy
+spec:
+  podSelector:
+    matchLabels:
+      app: ddiag
+  policyTypes:
+  - Ingress
+  - Egress
+  egress:
+  - {}
+  ingress:
+  - {}
+{{- end }}
