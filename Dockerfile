@@ -28,19 +28,6 @@ RUN apt update && apt install -y --no-install-recommends \
         curl \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && \
-    apt-get install -y locales && \
-    rm -rf /var/lib/apt/lists/* && \
-    localedef -i cs_CZ -c -f UTF-8 -A /usr/share/locale/locale.alias cs_CZ.UTF-8
-ENV LC_ALL cs_CZ.UTF-8
-ENV LANG cs_CZ.UTF-8
-
-# Install RabbitMQ
-COPY rabbitmq-install.sh /
-RUN chmod +x /rabbitmq-install.sh \
-    && /rabbitmq-install.sh \
-    && rm /rabbitmq-install.sh
-
 RUN groupadd --gid 1000 ${USER} \
     && useradd --uid 1000 --create-home --home-dir ${USER_HOME} -s /bin/bash -g ${USER} ${USER} \
     && usermod -aG sudo ${USER} \
@@ -48,5 +35,10 @@ RUN groupadd --gid 1000 ${USER} \
 
 RUN echo 'root:a' | chpasswd \
     && echo 'ddiag:a' | chpasswd
+
+# Add simple AMQP script to test connection
+RUN pip3 install kombu
+COPY amqp-test.py ${USER_HOME}/amqp-test.py
+RUN chown ${USER}:${USER} ${USER_HOME}/amqp-test.py
 
 ENTRYPOINT ["sleep", "infinity"]
