@@ -17,6 +17,7 @@ RUN apt update && apt install -y --no-install-recommends \
         python3-venv \
         htop \
         vim \
+        iputils-ping \
         dnsutils \
         nmap \
         strace \
@@ -38,7 +39,7 @@ RUN echo 'root:a' | chpasswd \
 
 # Add simple AMQP script to test connection
 RUN pip3 install kombu
-COPY amqp-test.py ${USER_HOME}/amqp-test.py
-RUN chown ${USER}:${USER} ${USER_HOME}/amqp-test.py
+COPY scripts ${USER_HOME}/scripts
+RUN chown -R ${USER}:${USER} ${USER_HOME}/scripts
 
 ENTRYPOINT ["sleep", "infinity"]
