@@ -2,6 +2,8 @@ import os
 import argparse
 import jsbeautifier
 
+from loguru import logger
+
 options = jsbeautifier.default_options()
 options.indent_size = 4
 options.unescape_strings = True
@@ -21,6 +23,14 @@ def is_potentially_obfuscated(original_code, beautified_code):
 
     return line_ratio < line_threshold
 
+def write_to_file(output_path, content):
+    try:
+        with open(output_path, 'w') as file:
+            file.write(content)
+        return True
+    except:
+        return False
+
 def process_file(input_path, output_path):
     with open(input_path, 'r') as file:
         original_code = file.read()
@@ -29,19 +39,22 @@ def process_file(input_path, output_path):
 
     try:
         beautified_code = jsbeautifier.beautify(original_code, options)
-        #beautified_code = decode_escape_sequences(beautified_code)
     except:
+        logger.error(f"Failed to deofuscate file: {input_path}")
         fail = True
 
-    if is_potentially_obfuscated(original_code, beautified_code):
-        with open(output_path, 'w') as file:
-            file.write(beautified_code)
-        print(f"Deobfuscated file: {input_path}")
-    elif fail:
-        with open(output_path, 'w') as file:
-            file.write("// Beautification failed")
-    else:
-        print(f"Skipping non-obfuscated file: {input_path}")
+    if not fail:
+        if not is_potentially_obfuscated(original_code, beautified_code):
+            logger.info(f"Skipping non-obfuscated file: {input_path}")
+        else:
+            if not write_to_file(output_path, beautified_code):
+                logger.error(f"Failed to save deofuscated file: {input_path}")
+                fail = True
+            else:
+                logger.info(f"Deobfuscated file: {input_path}")
+
+    if fail:
+        write_to_file(output_path, "// Beautification failed")
 
 #def process_directory(input_dir, skip_dirs):
 def process_directory(input_dir):
@@ -64,7 +77,7 @@ def main():
 
     process_directory(input_directory)
     #process_directory(input_directory, skip_dirs)
-    print("Beautification complete.")
+    logger.info("Beautification complete.")
 
 if __name__ == "__main__":
     main()
