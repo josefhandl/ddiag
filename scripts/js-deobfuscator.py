@@ -1,6 +1,7 @@
 import os
 import argparse
 import jsbeautifier
+import re
 
 from loguru import logger
 
@@ -23,6 +24,13 @@ def is_potentially_obfuscated(original_code, beautified_code):
 
     return line_ratio < line_threshold
 
+def transform_brackets_to_dots(input_code):
+    input_code = re.sub(r"\['([a-zA-Z_]\w*)'\](\('?[^\)]*'?\))", r".\1\2", input_code)
+    input_code = re.sub(r"\['([a-zA-Z_]\w*)'\](.\w+)", r".\1\2", input_code)
+
+    return input_code
+
+
 def write_to_file(output_path, content):
     try:
         with open(output_path, 'w') as file:
@@ -39,6 +47,7 @@ def process_file(input_path, output_path):
 
     try:
         beautified_code = jsbeautifier.beautify(original_code, options)
+        beautified_code = transform_brackets_to_dots(beautified_code)
     except:
         logger.error(f"Failed to deofuscate file: {input_path}")
         fail = True
@@ -61,7 +70,9 @@ def process_directory(input_dir):
     for root, dirs, files in os.walk(input_dir):
         #dirs[:] = [d for d in dirs if d not in skip_dirs]
         for file_name in files:
-            if file_name.endswith('.js'):
+            if file_name.endswith(".deobfuscated.js"):
+                logger.info(f"Skipping already-obfuscated file: {file_name}")
+            elif file_name.endswith('.js'):
                 input_path = os.path.join(root, file_name)
                 output_path = os.path.join(root, f"{file_name}.deobfuscated.js")
                 process_file(input_path, output_path)
