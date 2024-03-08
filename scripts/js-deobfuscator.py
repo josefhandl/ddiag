@@ -27,6 +27,8 @@ def is_potentially_obfuscated(original_code, beautified_code):
 def transform_brackets_to_dots(input_code):
     input_code = re.sub(r"\['([a-zA-Z_]\w*)'\](\('?[^\)]*'?\))", r".\1\2", input_code)
     input_code = re.sub(r"\['([a-zA-Z_]\w*)'\](.\w+)", r".\1\2", input_code)
+    input_code = re.sub(r"(_?this)\['([a-zA-Z_$]\w*)'\]", r"\1.\2", input_code)
+    input_code = re.sub(r"\['length'\]", r".length", input_code)
 
     return input_code
 
@@ -49,7 +51,7 @@ def process_file(input_path, output_path):
         beautified_code = jsbeautifier.beautify(original_code, options)
         beautified_code = transform_brackets_to_dots(beautified_code)
     except:
-        logger.error(f"Failed to deofuscate file: {input_path}")
+        logger.error(f"Failed to deobfuscate file: {input_path}")
         fail = True
 
     if not fail:
@@ -57,7 +59,7 @@ def process_file(input_path, output_path):
             logger.info(f"Skipping non-obfuscated file: {input_path}")
         else:
             if not write_to_file(output_path, beautified_code):
-                logger.error(f"Failed to save deofuscated file: {input_path}")
+                logger.error(f"Failed to save deobfuscated file: {input_path}")
                 fail = True
             else:
                 logger.info(f"Deobfuscated file: {input_path}")
