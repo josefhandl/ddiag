@@ -24,6 +24,7 @@ RUN apt update && apt install -y --no-install-recommends \
         curl \
 # Net info, DNS, performance \
         iputils-ping \
+        iproute2 \
         dnsutils \
         nmap \
         iperf3 \
@@ -54,11 +55,23 @@ RUN mkdir /opt/bin/ \
     && chmod +x kubectl
 ENV PATH "/opt/bin/:${PATH}"
 
+# Install Helm
+USER root
+RUN curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+USER ${USER}
+RUN curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+USER root
+
 # Install K9s tool for both users (root, ${USER})
+USER root
 RUN curl -sS https://webinstall.dev/k9s | bash
 USER ${USER}
 RUN curl -sS https://webinstall.dev/k9s | bash
 USER root
+
+# Install rabbitmqctl
+RUN apt update && apt install -y --no-install-recommends \
+        rabbitmq-server
 
 # Add simple scripts to test connection and applications
 COPY --chown=${USER}:${USER} scripts /opt/scripts
