@@ -23,7 +23,7 @@ spec:
 
       containers:
       - name: ddiag
-        image: hub.cerit.io/josef_handl/ddiag:20.04
+        image: hub.cerit.io/josef_handl/ddiag:{{ .Values.image.tag }}
         imagePullPolicy: Always
 
 {{- if .Values.securityContext }}
