@@ -75,6 +75,7 @@ RUN apt update && apt install -y --no-install-recommends \
 
 # Add simple scripts to test connection and applications
 COPY --chown=${USER}:${USER} scripts /opt/scripts
+USER ${USER}
 WORKDIR /opt/scripts
 RUN python3 -m venv venv \
     && /opt/scripts/venv/bin/pip3 install -r /opt/scripts/requirements.txt

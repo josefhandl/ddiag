@@ -1,9 +1,12 @@
 
-# jwt-decode.py
-requests==2.28.2
-pyjwt==2.8.0; extra == 'crypto'
-cryptography==41.0.5
+# amqp-test.py
+kombu==5.3.7
 
 # js-deobfuscator.py
 jsbeautifier==1.15.1
 loguru==0.7.2
+
+# jwt-decode.py
+requests==2.28.2
+pyjwt==2.8.0; extra == 'crypto'
+cryptography==41.0.5
