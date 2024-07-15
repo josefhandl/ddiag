@@ -36,3 +36,32 @@ spec:
             drop:
             - ALL
 {{- end }}
+
+{{- if or .Values.localCaCert.enable .Values.clientCert.enable }}
+        volumeMounts:
+  {{- if .Values.localCaCert.enable }}
+        - name: local-ca-cert-volume
+          mountPath: /etc/ssl/certs/local-ca.crt
+          subPath: ca.crt
+  {{- end }}
+  {{- if .Values.clientCert.enable }}
+        - name: client-cert-volume
+          mountPath: /home/ubuntu/client.crt
+          subPath: tls.crt
+        - name: client-cert-volume
+          mountPath: /home/ubuntu/client.key
+          subPath: tls.key
+  {{- end }}
+
+      volumes:
+  {{- if .Values.localCaCert.enable }}
+      - name: local-ca-cert-volume
+        secret:
+          secretName: {{ .Values.localCaCert.secret }}
+  {{- end }}
+  {{- if .Values.clientCert.enable }}
+      - name: client-cert-volume
+        secret:
+          secretName: ddiag-client-cert
+  {{- end }}
+{{- end }}

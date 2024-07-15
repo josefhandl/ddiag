@@ -1,4 +1,7 @@
 
+# amqp-create-queue.py
+pika==1.3.2
+
 # amqp-test.py
 kombu==5.3.7
 

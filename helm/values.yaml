@@ -8,3 +8,11 @@ networkPolicy: true
 
 image:
   tag: "24.04"
+
+localCaCert:
+  enable: false
+  secret: ""
+
+clientCert:
+  enable: false
+  issuer: ""
