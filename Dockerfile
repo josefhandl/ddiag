@@ -79,6 +79,8 @@ USER ${USER}
 WORKDIR /opt/scripts
 RUN python3 -m venv venv \
     && /opt/scripts/venv/bin/pip3 install -r /opt/scripts/requirements.txt
+USER root
+
 # Add cheatsheet
 COPY cheatsheet.md /opt/
 
