@@ -9,9 +9,9 @@ user = ""
 password = ""
 vhost = ""
 
-ca_crt = "/etc/ssl/certs/local-ca.crt"
-client_crt = '/home/ubuntu/client.crt'
-client_key = '/home/ubuntu/client.key'
+ca_crt = "/home/ubuntu/ca.crt"
+client_crt = '/home/ubuntu/tls_client.crt'
+client_key = '/home/ubuntu/tls_client.key'
 
 new_queue = ""
 

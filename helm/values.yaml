@@ -16,3 +16,8 @@ localCaCert:
 clientCert:
   enable: false
   issuer: ""
+
+pvc:
+  enable: true
+  storageClassName: nfs-csi
+  size: 1Gi

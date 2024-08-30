@@ -37,7 +37,7 @@ spec:
             - ALL
 {{- end }}
 
-{{- if or .Values.localCaCert.enable .Values.clientCert.enable }}
+{{- if or .Values.localCaCert.enable .Values.clientCert.enable .Values.pvc.enable }}
         volumeMounts:
   {{- if .Values.localCaCert.enable }}
         - name: local-ca-cert-volume
@@ -46,11 +46,18 @@ spec:
   {{- end }}
   {{- if .Values.clientCert.enable }}
         - name: client-cert-volume
-          mountPath: /home/ubuntu/client.crt
+          mountPath: /home/ubuntu/ca.crt
+          subPath: ca.crt
+        - name: client-cert-volume
+          mountPath: /home/ubuntu/tls_client.crt
           subPath: tls.crt
         - name: client-cert-volume
-          mountPath: /home/ubuntu/client.key
+          mountPath: /home/ubuntu/tls_client.key
           subPath: tls.key
+  {{- end }}
+  {{- if .Values.pvc.enable }}
+        - name: ddiag-pvc
+          mountPath: /data
   {{- end }}
 
       volumes:
@@ -63,5 +70,10 @@ spec:
       - name: client-cert-volume
         secret:
           secretName: ddiag-client-cert
+  {{- end }}
+  {{- if .Values.pvc.enable }}
+      - name: ddiag-pvc
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-ddiag
   {{- end }}
 {{- end }}
