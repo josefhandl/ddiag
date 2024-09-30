@@ -13,6 +13,8 @@ ca_crt = "/home/ubuntu/ca.crt"
 client_crt = '/home/ubuntu/tls_client.crt'
 client_key = '/home/ubuntu/tls_client.key'
 
+durable = False
+
 new_queue = ""
 
 
@@ -32,7 +34,7 @@ parameters = pika.ConnectionParameters(host,
 try:
     connection = pika.BlockingConnection(parameters)
     channel = connection.channel()
-    channel.queue_declare(queue=new_queue)
+    channel.queue_declare(queue=new_queue, durable=durable)
     connection.close()
     print("Queue created successfully.")
 except pika.exceptions.ProbableAuthenticationError:

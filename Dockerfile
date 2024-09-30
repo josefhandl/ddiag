@@ -22,6 +22,7 @@ RUN apt update && apt install -y --no-install-recommends \
         git \
         wget \
         curl \
+        screen \
 # Net info, DNS, performance \
         iputils-ping \
         iproute2 \
