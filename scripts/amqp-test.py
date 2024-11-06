@@ -10,11 +10,27 @@ user = ""
 password = ""
 vhost = ""
 
-url = 'amqps://{0}:{1}@{2}:{3}/{4}'.format(user, password, host, port, vhost)
+tls = False
+ca_crt = "/home/ubuntu/ca.crt"
+client_crt = '/home/ubuntu/tls_client.crt'
+client_key = '/home/ubuntu/tls_client.key'
 
-broker_use_ssl = {
-  'cert_reqs': ssl.CERT_NONE
-}
+
+protocol = "amqps" if tls else "amqp"
+url = '{0}://{1}:{2}@{3}:{4}/{5}'.format(protocol, user, password, host, port, vhost)
+
+if tls:
+    broker_use_ssl = {
+        'cert_reqs': ssl.CERT_REQUIRED,
+        'ca_certs': ca_crt,
+        'keyfile': client_key,
+        'certfile': client_crt
+    }
+else:
+    broker_use_ssl = {
+        'cert_reqs': ssl.CERT_NONE
+    }
+
 with Connection(url, ssl=broker_use_ssl) as c:
     try:
         c.connect()
