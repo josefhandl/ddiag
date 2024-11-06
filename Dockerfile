@@ -14,7 +14,6 @@ RUN apt update && apt install -y --no-install-recommends \
         python3 \
         python3-pip \
         python3-venv \
-        strace \
         openssh-client \
 # Basic tools \
         htop \
@@ -23,6 +22,10 @@ RUN apt update && apt install -y --no-install-recommends \
         wget \
         curl \
         screen \
+# Debugging tools \
+        strace \
+        file \
+        xxd \
 # Net info, DNS, performance \
         iputils-ping \
         iproute2 \

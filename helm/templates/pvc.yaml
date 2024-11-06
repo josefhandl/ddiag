@@ -1,3 +1,4 @@
+{{- if eq .Values.pvc.type "custom" }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -9,3 +10,4 @@ spec:
     requests:
       storage: {{ .Values.pvc.size }}
   storageClassName: {{ .Values.pvc.storageClassName }}
+{{- end }}

@@ -7,7 +7,8 @@ securityContext: true
 networkPolicy: true
 
 image:
-  tag: "24.04"
+  name: ghcr.io/josefhandl/ddiag
+  tag: main
 
 localCaCert:
   enable: false
@@ -18,6 +19,12 @@ clientCert:
   issuer: ""
 
 pvc:
-  enable: true
+  # Possible values: "existing", "custom", "none"
+  type: none
+
+  # type: custom
   storageClassName: nfs-csi
   size: 1Gi
+
+  # type: existing
+  name: data-sda-mq-0
