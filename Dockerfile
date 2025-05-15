@@ -26,6 +26,7 @@ RUN apt update && apt install -y --no-install-recommends \
         strace \
         file \
         xxd \
+        jq \
 # Net info, DNS, performance \
         iputils-ping \
         iproute2 \
