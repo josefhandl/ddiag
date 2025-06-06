@@ -38,6 +38,8 @@ RUN apt update && apt install -y --no-install-recommends \
         postgresql \
         s3cmd \
         s4cmd \
+# Benchmarks
+        stress \
 # Browsh dependency
         firefox \
     && rm -rf /var/lib/apt/lists/*
