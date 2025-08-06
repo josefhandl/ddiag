@@ -14,10 +14,10 @@ echo "$header" | base64 -d -w0 | jq
 echo "Payload:"
 echo "$payload" | base64 -d -w0 | jq
 
-exp=$(echo "$payload" | base64 -d -w0 | jq | grep -Po '"exp": \K[^,]*')
 iat=$(echo "$payload" | base64 -d -w0 | jq | grep -Po '"iat": \K[^,]*')
-echo "Converted EXP: $(date -d @$exp)"
+exp=$(echo "$payload" | base64 -d -w0 | jq | grep -Po '"exp": \K[^,]*')
 echo "Converted IAT: $(date -d @$iat)"
+echo "Converted EXP: $(date -d @$exp)"
 
 echo "Signature:"
 echo "$signature"
