@@ -14,7 +14,9 @@ RUN apt update && apt install -y --no-install-recommends \
         python3 \
         python3-pip \
         python3-venv \
+        python-is-python3 \
         openssh-client \
+        mandoc \
 # Basic tools \
         htop \
         vim \
@@ -22,6 +24,7 @@ RUN apt update && apt install -y --no-install-recommends \
         wget \
         curl \
         screen \
+        unzip \
 # Debugging tools \
         strace \
         file \
@@ -60,6 +63,13 @@ RUN cd /tmp/ \
     && wget https://github.com/peak/s5cmd/releases/download/v2.3.0/s5cmd_2.3.0_linux_amd64.deb \
     && apt install ./s5cmd_2.3.0_linux_amd64.deb \
     && rm ./s5cmd_2.3.0_linux_amd64.deb
+
+# Install aws cli
+RUN cd /tmp/ \
+    && curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip" \
+    && unzip awscli-bundle.zip \
+    && ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \
+    && rm -r awscli-bundle.zip awscli-bundle
 
 # Install Kubectl
 RUN mkdir /opt/bin/ \
