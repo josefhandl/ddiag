@@ -55,6 +55,12 @@ RUN cd /tmp/ \
     && apt install ./browsh_1.8.0_linux_amd64.deb \
     && rm ./browsh_1.8.0_linux_amd64.deb
 
+# Install s5cmd
+RUN cd /tmp/ \
+    && wget https://github.com/peak/s5cmd/releases/download/v2.3.0/s5cmd_2.3.0_linux_amd64.deb \
+    && apt install ./s5cmd_2.3.0_linux_amd64.deb \
+    && rm ./s5cmd_2.3.0_linux_amd64.deb
+
 # Install Kubectl
 RUN mkdir /opt/bin/ \
     && cd /opt/bin/ \
