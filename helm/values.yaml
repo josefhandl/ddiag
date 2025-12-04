@@ -4,11 +4,17 @@ securityContext: true
 
 # Create NetworkPolicy enabling anything "from" and "to" the DDiag?
 # This is unneccessary if you have no other NetworkPolicy in the current namespace.
-networkPolicy: true
+networkPolicy: false
 
 image:
   name: ghcr.io/josefhandl/ddiag
   tag: main
+
+resources:
+  mincpu: 1
+  maxcpu: 1
+  minram: 512Mi
+  maxram: 512Mi
 
 localCaCert:
   enable: false

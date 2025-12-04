@@ -38,6 +38,14 @@ spec:
             - ALL
 {{- end }}
 
+        resources:
+          limits:
+            cpu: {{ .Values.resources.maxcpu }}
+            memory: {{ .Values.resources.maxram }}
+          requests:
+            cpu: {{ .Values.resources.mincpu }}
+            memory: {{ .Values.resources.minram }}
+
 {{- if or .Values.localCaCert.enable .Values.clientCert.enable .Values.pvc.enable }}
         volumeMounts:
   {{- if .Values.localCaCert.enable }}
