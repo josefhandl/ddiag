@@ -37,6 +37,7 @@ RUN apt update && apt install -y --no-install-recommends \
         nmap \
         iperf3 \
         iperf \
+        netcat-openbsd \
 # Application clients \
         postgresql \
         s3cmd \
@@ -45,6 +46,8 @@ RUN apt update && apt install -y --no-install-recommends \
         stress \
 # Browsh dependency
         firefox \
+# RabbitMQ
+        rabbitmq-server \
     && rm -rf /var/lib/apt/lists/*
 
 RUN usermod -aG sudo ubuntu
@@ -91,10 +94,6 @@ RUN curl -sS https://webinstall.dev/k9s | bash
 USER ${USER}
 RUN curl -sS https://webinstall.dev/k9s | bash
 USER root
-
-# Install rabbitmqctl
-RUN apt update && apt install -y --no-install-recommends \
-        rabbitmq-server
 
 # Add simple scripts to test connection and applications
 COPY --chown=${USER}:${USER} scripts /opt/scripts
