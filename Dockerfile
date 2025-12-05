@@ -55,6 +55,12 @@ RUN usermod -aG sudo ubuntu
 RUN echo "root:a" | chpasswd \
     && echo "${USER}:a" | chpasswd
 
+# Install gRPCurl
+RUN cd /tmp/ \
+    && wget https://github.com/fullstorydev/grpcurl/releases/download/v1.9.3/grpcurl_1.9.3_linux_amd64.deb \
+    && apt install ./grpcurl_1.9.3_linux_amd64.deb \
+    && rm ./grpcurl_1.9.3_linux_amd64.deb
+
 # Install Browsh - text-based web browser with JavaScript support
 RUN cd /tmp/ \
     && wget https://github.com/browsh-org/browsh/releases/download/v1.8.0/browsh_1.8.0_linux_amd64.deb \
@@ -108,4 +114,3 @@ COPY cheatsheet.md /opt/
 
 WORKDIR /opt
 
-ENTRYPOINT ["sleep", "infinity"]
