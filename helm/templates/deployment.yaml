@@ -26,6 +26,10 @@ spec:
       - name: ddiag
         image: {{ .Values.image.name }}:{{ .Values.image.tag }}
         imagePullPolicy: Always
+        command:
+        - sleep
+        args:
+        - infinity
 
 {{- if .Values.securityContext }}
         securityContext:
