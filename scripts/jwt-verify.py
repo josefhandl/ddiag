@@ -5,10 +5,15 @@ import posixpath
 import jwt
 import jwt.algorithms
 import sys
+import os
+import ssl
+import warnings
 from jwt import PyJWKClient, PyJWKClientError
 
+# Suppress urllib3 InsecureRequestWarning
+warnings.filterwarnings('ignore', module='urllib3')
 
-def verify_token(token, verify = True):
+def verify_token(token, verify = True, insecure = False):
     """
     WARNING: Verify validity of given JWT token for OAuth2.
     Accepts any valid tokens from any issuer including owns!
@@ -50,9 +55,9 @@ def verify_token(token, verify = True):
     # Get "jwk_uri" endpoint
     issuer_wk_config_url = posixpath.join(token_iss, ".well-known/openid-configuration")
     try:
-        response = requests.get(issuer_wk_config_url)
+        response = requests.get(issuer_wk_config_url, verify=(not insecure))
     except Exception as e:
-        raise Exception("Contacting the token issuer failed.")
+        raise Exception(f"Contacting the token issuer failed. Ex: {str(e)}")
 
     if response.status_code != 200:
         raise Exception(f"Contacting the token issuer returns HTTP code {response.status_code}.")
@@ -68,7 +73,13 @@ def verify_token(token, verify = True):
 
     # Get signing key from the "jwk_uri"
     try:
-        jwks_client = PyJWKClient(issuer_jwk_uri)
+        if insecure:
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            jwks_client = PyJWKClient(issuer_jwk_uri, ssl_context=ssl_context)
+        else:
+            jwks_client = PyJWKClient(issuer_jwk_uri)
         issuer_signing = jwks_client.get_signing_key_from_jwt(token).key
     except (PyJWKClientError, Exception) as e:
         raise Exception(f"Failed to obtain issuer signing key. Ex: {str(e)}")
@@ -101,14 +112,28 @@ def verify_token(token, verify = True):
 
     return True #token_sub
 
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} <jwt_token>")
-        exit(1)
+def exit_with_msg():
+    print(f"Usage: {sys.argv[0]} <jwt_token>")
+    print(f"Usage: {sys.argv[0]} --insecure <jwt_token>")
+    print(f"Insecure option skip server certificate verification.")
+    exit(1)
 
-    token = sys.argv[1]
+
+if __name__ == "__main__":
+    argc = len(sys.argv)
+    if not (argc >= 2 and argc <= 3):
+        exit_with_msg()
+
+    if "--insecure" == sys.argv[1]:
+        insecure = True
+        token = sys.argv[2]
+        print("Warning: SSL certificate verification is disabled")
+    else:
+        insecure = False
+        token = sys.argv[1]
+
     try:
-        if verify_token(token, verify=True):
+        if verify_token(token, verify=True, insecure=insecure):
             print("Info: Token is valid")
         else:
             print("Info: Token verification was skipped.")
