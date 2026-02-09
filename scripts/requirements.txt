@@ -11,5 +11,5 @@ loguru==0.7.2
 
 # jwt-decode.py
 requests==2.28.2
-PyJWT==2.8.0; extra == 'crypto'
+PyJWT==2.11.0
 cryptography==41.0.5
