@@ -1,9 +1,10 @@
-#!/usr/bin/python3
+#!venv/bin/python3
 
 import requests
 import posixpath
 import jwt
 import jwt.algorithms
+import sys
 from jwt import PyJWKClient, PyJWKClientError
 
 
@@ -101,9 +102,13 @@ def verify_token(token, verify = True):
     return True #token_sub
 
 if __name__ == "__main__":
-    token = ""
+    if len(sys.argv) != 2:
+        print(f"Usage: {sys.argv[0]} <jwt_token>")
+        exit(1)
+
+    token = sys.argv[1]
     try:
-        if verify_token(token, verify=False):
+        if verify_token(token, verify=True):
             print("Info: Token is valid")
         else:
             print("Info: Token verification was skipped.")
