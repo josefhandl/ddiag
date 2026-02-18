@@ -43,12 +43,7 @@ spec:
 {{- end }}
 
         resources:
-          limits:
-            cpu: {{ .Values.resources.maxcpu }}
-            memory: {{ .Values.resources.maxram }}
-          requests:
-            cpu: {{ .Values.resources.mincpu }}
-            memory: {{ .Values.resources.minram }}
+{{- toYaml .Values.resources | nindent 10 }}
 
 {{- if or .Values.localCaCert.enable .Values.clientCert.enable .Values.pvc.enable }}
         volumeMounts:
@@ -90,11 +85,11 @@ spec:
   {{- if eq .Values.pvc.type "existing" }}
       - name: ddiag-pvc
         persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-ddiag
+          claimName: {{ .Values.pvc.name }}
   {{- else if eq .Values.pvc.type "custom" }}
       - name: ddiag-pvc
         persistentVolumeClaim:
-          claimName: {{ .Values.pvc.name }}
+          claimName: {{ .Release.Name }}-ddiag
   {{- end }}
 
 {{- end }}
