@@ -25,6 +25,7 @@ RUN apt update && apt install -y --no-install-recommends \
         curl \
         screen \
         unzip \
+        tree \
 # Debugging tools \
         strace \
         file \
