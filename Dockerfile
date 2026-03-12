@@ -9,6 +9,8 @@ RUN apt update && apt install -y --no-install-recommends \
         ca-certificates \
         apt-transport-https \
         locales \
+        attr \
+        acl \
         gnupg \
         sudo \
         python3 \
