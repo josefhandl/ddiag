@@ -1,10 +1,11 @@
 #!venv/bin/python3
 
-import requests
-import posixpath
+import datetime
 import json
 import jwt
 import jwt.algorithms
+import posixpath
+import requests
 import ssl
 import sys
 import warnings
@@ -159,8 +160,7 @@ class JWTVerifier:
 def print_json(raw_json):
     formatted_json = json.dumps(raw_json, sort_keys=True, indent=2)
     colorful_json = highlight(formatted_json, lexers.JsonLexer(), formatters.TerminalFormatter())
-    print(colorful_json)
-    print()
+    print(colorful_json, end="")
 
 
 def exit_with_msg():
@@ -205,9 +205,18 @@ if __name__ == "__main__":
     print("Header:")
     print("--------------------")
     print_json(jwtVerifier.get_token_header())
+    print()
     print("Payload:")
     print("--------------------")
     print_json(jwtVerifier.get_token_payload())
+    # Print times
+    iat_unix = jwtVerifier.get_token_payload().get("iat")
+    exp_unix = jwtVerifier.get_token_payload().get("exp")
+    iat = datetime.datetime.fromtimestamp(int(iat_unix)).strftime('%Y-%m-%d %H:%M:%S')
+    exp = datetime.datetime.fromtimestamp(int(exp_unix)).strftime('%Y-%m-%d %H:%M:%S')
+    print(f"Issued at  (IAT): {iat}")
+    print(f"Expiration (EXP): {exp}")
+    print()
 
     # Verify JWT token
     #=================================
